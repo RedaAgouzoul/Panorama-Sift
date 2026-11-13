@@ -1,0 +1,7 @@
+# Dépendances du projet panorama_sift
+# Versions testées : Python 3.12, numpy 2.4, opencv 4.13, Pillow 12.1, streamlit 1.66
+# (les intervalles ci-dessous acceptent aussi des versions plus anciennes compatibles)
+numpy>=1.26,<3
+opencv-python>=4.10.0.84,<5
+Pillow>=10.0
+streamlit>=1.40,<2

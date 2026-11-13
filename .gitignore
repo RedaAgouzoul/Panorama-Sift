@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+exemples/jeux_de_test/
+_resultat_test_*.png
+.vscode/
+.venv/
