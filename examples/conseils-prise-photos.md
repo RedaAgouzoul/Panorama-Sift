@@ -5,7 +5,7 @@ Aucune photo n'est fournie avec le projet : vous devez prendre les vôtres
 (ou utiliser les images synthétiques décrites plus bas pour de simples tests techniques).
 
 
-1. PRENDRE DE BONNES PHOTOS (recommandé pour la soutenance)
+1. PRENDRE DE BONNES PHOTOS
 -----------------------------------------------------------
 - Placez-vous face à la scène (paysage, bâtiment, rue) et PIVOTEZ sur vous-même
   entre les photos, sans vous déplacer (comme un trépied). Évitez de marcher.
@@ -25,9 +25,9 @@ Aucune photo n'est fournie avec le projet : vous devez prendre les vôtres
 ----------------------------------------------------
 Depuis le dossier du projet, environnement virtuel activé :
 
-    python exemples\generer_jeux_de_test.py
+    python scripts\generate_test_images.py
 
-Cela crée le dossier exemples\jeux_de_test\ avec 5 sous-dossiers :
+Cela crée le dossier examples\jeux_de_test\ avec 5 sous-dossiers :
   1_deux_images_ok          -> 2 images avec ~40 % de chevauchement
   2_sans_zone_commune       -> 2 images de scènes différentes
   3_trois_images_ok         -> 3 images successives
@@ -60,3 +60,4 @@ Test 5 - Trop peu de correspondances (dossier 5_...)
    Attendu : « Seulement 5 correspondances fiables après le ratio test (minimum requis : 12) ... »
 
 Les chiffres exacts peuvent varier légèrement selon les versions d'OpenCV.
+

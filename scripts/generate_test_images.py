@@ -7,12 +7,12 @@ tester l'application sans avoir de photos sous la main.
 
 Attention : ce ne sont pas de vraies photographies. Elles servent à vérifier
 que le programme fonctionne et à reproduire les cas d'erreur. Pour la
-soutenance, utilisez de vraies photos (voir exemples/instructions.txt).
+une validation réaliste, utilisez de vraies photos (voir examples/conseils-prise-photos.md).
 
 Utilisation (depuis le dossier panorama_sift, environnement virtuel activé) :
-    python exemples/generer_jeux_de_test.py
+    python scripts/generate_test_images.py
 
-Les images sont créées dans exemples/jeux_de_test/ .
+Les images sont créées dans examples/jeux_de_test/ .
 """
 
 import os
@@ -154,8 +154,10 @@ def generate_all(output_dir: str) -> dict:
 
 
 if __name__ == "__main__":
-    destination = os.path.join(os.path.dirname(os.path.abspath(__file__)), "jeux_de_test")
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    destination = os.path.join(project_root, "examples", "jeux_de_test")
     created = generate_all(destination)
     print(f"Jeux de test créés dans : {destination}")
     for name, files in created.items():
         print(f"  - {name} : {len(files)} fichier(s)")
+

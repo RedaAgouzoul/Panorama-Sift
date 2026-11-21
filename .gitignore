@@ -1,7 +1,8 @@
 venv/
 __pycache__/
+.pytest_cache/
 *.pyc
-exemples/jeux_de_test/
+examples/jeux_de_test/
 _resultat_test_*.png
 .vscode/
 .venv/
