@@ -22,6 +22,113 @@ EXTENSIONS_ACCEPTEES = ["png", "jpg", "jpeg", "bmp", "webp", "tif", "tiff"]
 
 st.set_page_config(page_title="Panorama SIFT", page_icon="🏞️", layout="wide")
 
+st.markdown(
+    """
+    <style>
+    /* Base claire et compacte */
+    .stApp {
+        background: #f8fafc;
+        color: #0f172a;
+    }
+    .block-container {
+        max-width: 1240px;
+        padding-top: 2.25rem;
+        padding-bottom: 3rem;
+    }
+    h1, h2, h3 {
+        color: #0f172a;
+        letter-spacing: -0.025em;
+    }
+    h1 { font-weight: 750; }
+    h2, h3 { font-weight: 650; }
+    p, label, .stCaption { color: #475569; }
+
+    /* Barre latérale */
+    [data-testid="stSidebar"] {
+        background: #ffffff;
+        border-right: 1px solid #e2e8f0;
+    }
+    [data-testid="stSidebar"] .block-container {
+        padding-top: 1.75rem;
+    }
+
+    /* Cartes, zones d'import et métriques */
+    [data-testid="stFileUploaderDropzone"],
+    [data-testid="stMetric"],
+    [data-testid="stExpander"] {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+    [data-testid="stMetric"] {
+        padding: 1rem 1.1rem;
+    }
+    [data-testid="stMetricValue"] {
+        color: #0f172a;
+        font-weight: 700;
+    }
+
+    /* Boutons */
+    .stButton > button, .stDownloadButton > button {
+        min-height: 2.65rem;
+        border-radius: 9px;
+        border: 1px solid #cbd5e1;
+        font-weight: 600;
+        transition: border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+    }
+    .stButton > button:hover, .stDownloadButton > button:hover {
+        border-color: #2563eb;
+        color: #1d4ed8;
+        box-shadow: 0 3px 10px rgba(37, 99, 235, 0.12);
+        transform: translateY(-1px);
+    }
+    .stButton > button[kind="primary"] {
+        background: #2563eb;
+        border-color: #2563eb;
+        color: #ffffff;
+    }
+    .stButton > button:disabled {
+        background: #e2e8f0;
+        border-color: #e2e8f0;
+        color: #94a3b8;
+        box-shadow: none;
+        transform: none;
+    }
+
+    /* Onglets et séparateurs */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 0.35rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .stTabs [data-baseweb="tab"] {
+        border-radius: 8px 8px 0 0;
+        padding: 0.65rem 0.9rem;
+        color: #475569;
+        font-weight: 600;
+    }
+    .stTabs [aria-selected="true"] {
+        color: #1d4ed8;
+        background: #eff6ff;
+    }
+    hr { border-color: #e2e8f0; }
+
+    /* Messages plus sobres */
+    [data-testid="stAlert"] {
+        border-radius: 10px;
+        border-width: 1px;
+    }
+
+    /* Images */
+    [data-testid="stImage"] img {
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 
 # ---------------------------------------------------------------------------
 # Petites fonctions utilitaires d'affichage
