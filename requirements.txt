@@ -5,3 +5,4 @@ numpy>=1.26,<3
 opencv-python>=4.10.0.84,<5
 Pillow>=10.0
 streamlit>=1.40,<2
+pytest>=8,<10
