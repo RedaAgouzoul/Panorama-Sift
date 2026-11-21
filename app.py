@@ -8,15 +8,15 @@ appariement de caractéristiques SIFT ».
 Lancement :   streamlit run app.py
 
 Ce fichier ne contient que l'interface. Tous les algorithmes (SIFT, appariement,
-RANSAC, assemblage) sont dans panorama.py.
+RANSAC, assemblage) sont dans le package panorama_sift.
 """
 
 import cv2
 import numpy as np
 import streamlit as st
 
-from panorama import (PanoramaError, PanoramaParams, PipelineResult, encode_image,
-                      load_image_from_bytes, resize_keep_ratio, run_pipeline)
+from panorama_sift import (PanoramaError, PanoramaParams, PipelineResult, encode_image,
+                           load_image_from_bytes, resize_keep_ratio, run_pipeline)
 
 EXTENSIONS_ACCEPTEES = ["png", "jpg", "jpeg", "bmp", "webp", "tif", "tiff"]
 
