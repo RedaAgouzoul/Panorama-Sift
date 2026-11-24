@@ -66,8 +66,9 @@ def compute_canvas(images: List[np.ndarray], homographies: List[np.ndarray],
     return translation, (canvas_width, canvas_height)
 
 
-def blend_images(images: List[np.ndarray], homographies: List[np.ndarray],
-                 translation: np.ndarray, canvas_size: Tuple[int, int]) -> Tuple[np.ndarray, np.ndarray]:
+def blend_images(images: List[np.ndarray], masks: List[np.ndarray],
+                 homographies: List[np.ndarray], translation: np.ndarray,
+                 canvas_size: Tuple[int, int]) -> Tuple[np.ndarray, np.ndarray]:
     """Projette chaque image dans le canevas et fusionne les zones de chevauchement.
 
     Fusion « pondérée par la distance au bord » (feathering) : dans une zone
@@ -80,8 +81,7 @@ def blend_images(images: List[np.ndarray], homographies: List[np.ndarray],
     weighted_sum = np.zeros((canvas_height, canvas_width, 3), dtype=np.float32)
     weight_total = np.zeros((canvas_height, canvas_width), dtype=np.float32)
 
-    for image, homography in zip(images, homographies):
-        height, width = image.shape[:2]
+    for image, source_mask, homography in zip(images, masks, homographies):
         full_transform = translation @ homography
 
         # warpPerspective : pour chaque pixel du canevas, va chercher le pixel
@@ -89,7 +89,7 @@ def blend_images(images: List[np.ndarray], homographies: List[np.ndarray],
         warped = cv2.warpPerspective(image, full_transform, canvas_size, flags=cv2.INTER_LINEAR,
                                      borderMode=cv2.BORDER_CONSTANT, borderValue=0)
         # Masque des pixels réellement couverts par cette image
-        coverage = cv2.warpPerspective(np.full((height, width), 255, np.uint8), full_transform,
+        coverage = cv2.warpPerspective(source_mask, full_transform,
                                        canvas_size, flags=cv2.INTER_NEAREST)
         # On érode d'un pixel pour éviter le liseré sombre dû à l'interpolation
         coverage = cv2.erode(coverage, np.ones((3, 3), np.uint8))
@@ -170,7 +170,8 @@ def crop_panorama(panorama: np.ndarray, valid_mask: np.ndarray,
     return panorama[y0:y1, x0:x1], (x0, y0, x1, y1)
 
 
-def assemble_panorama(images: List[np.ndarray], pair_homographies: List[np.ndarray],
+def assemble_panorama(images: List[np.ndarray], masks: List[np.ndarray],
+                      pair_homographies: List[np.ndarray],
                       params: PanoramaParams, result: PipelineResult) -> np.ndarray:
     """Étape d'assemblage complète ; remplit aussi les champs de `result`."""
     image_count = len(images)
@@ -183,7 +184,7 @@ def assemble_panorama(images: List[np.ndarray], pair_homographies: List[np.ndarr
     translation, canvas_size = compute_canvas(images, homographies, params.max_canvas_pixels)
     result.canvas_size = canvas_size
 
-    panorama, valid_mask = blend_images(images, homographies, translation, canvas_size)
+    panorama, valid_mask = blend_images(images, masks, homographies, translation, canvas_size)
     cropped, crop_box = crop_panorama(panorama, valid_mask, params.crop_mode)
     result.crop_box = crop_box
     if cropped.size == 0:

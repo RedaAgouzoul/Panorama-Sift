@@ -39,6 +39,7 @@ class PreparedImage:
 
     name: str
     bgr: np.ndarray                 # image redimensionnée (BGR, uint8)
+    valid_mask: np.ndarray          # pixels réels à conserver (uint8 : 0 ou 255)
     original_size: Tuple[int, int]  # (largeur, hauteur) avant redimensionnement
 
 

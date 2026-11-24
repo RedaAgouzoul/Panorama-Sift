@@ -14,7 +14,8 @@ from .stitching import assemble_panorama
 ProgressCallback = Callable[[float, str], None]
 
 def run_pipeline(files: List[Tuple[str, bytes]], params: Optional[PanoramaParams] = None,
-                 progress: Optional[ProgressCallback] = None) -> PipelineResult:
+                 progress: Optional[ProgressCallback] = None, *,
+                 diagonal_crops=None) -> PipelineResult:
     """Exécute toutes les étapes. Ne lève pas d'exception « métier » :
     en cas de problème, result.error et result.error_step sont renseignés et
     tout ce qui a pu être calculé avant l'erreur reste disponible."""
@@ -30,7 +31,7 @@ def run_pipeline(files: List[Tuple[str, bytes]], params: Optional[PanoramaParams
         # --- Étape 1 : chargement -------------------------------------------------
         report(0.02, "Étape 1/5 : chargement des images…")
         start = time.perf_counter()
-        result.images = prepare_images(files, params.max_side)
+        result.images = prepare_images(files, params.max_side, diagonal_crops)
         result.durations["1. Chargement"] = time.perf_counter() - start
 
         # --- Étape 2 : SIFT ---------------------------------------------------------
@@ -39,7 +40,7 @@ def run_pipeline(files: List[Tuple[str, bytes]], params: Optional[PanoramaParams
         for position, prepared in enumerate(result.images):
             report(0.10 + 0.25 * position / len(result.images),
                    f"Étape 2/5 : SIFT sur l'image {position + 1}/{len(result.images)}…")
-            features = detect_sift_features(prepared.bgr)
+            features = detect_sift_features(prepared.bgr, prepared.valid_mask)
             result.features.append(features)
             result.keypoint_images.append(draw_keypoints_image(prepared.bgr, features))
         result.durations["2. Détection SIFT"] = time.perf_counter() - start
@@ -78,6 +79,7 @@ def run_pipeline(files: List[Tuple[str, bytes]], params: Optional[PanoramaParams
         start = time.perf_counter()
         result.panorama = assemble_panorama(
             [prepared.bgr for prepared in result.images],
+            [prepared.valid_mask for prepared in result.images],
             [pair.homography for pair in result.pairs],
             params, result
         )

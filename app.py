@@ -263,7 +263,25 @@ if files_payload:
                 st.image(preview_rgb, caption=f"{position + 1}. {name}")
 
 # Empreinte des entrées : permet de détecter que les images/paramètres ont changé
-current_signature = (tuple((name, len(content)) for name, content in files_payload), params)
+diagonal_crops = {}
+if files_payload:
+    with st.expander("Découpe diagonale des images"):
+        st.caption("Position de la diagonale en pourcentage depuis le haut. "
+                   "0 = haut, 100 = bas. Les valeurs hors de cette plage prolongent la ligne.")
+        for index, (name, _) in enumerate(files_payload):
+            key = f"diagonale_{st.session_state['uploader_key']}_{index}_{name}"
+            side = st.selectbox(
+                f"Image {index + 1} · {name}",
+                ["Automatique", "Garder au-dessus", "Garder en dessous"],
+                key=key,
+            )
+            if side != "Automatique":
+                left = st.slider("Hauteur au bord gauche (%)", -50, 150, 0, key=f"{key}_left")
+                right = st.slider("Hauteur au bord droit (%)", -50, 150, 100, key=f"{key}_right")
+                diagonal_crops[index] = (left, right, side == "Garder au-dessus")
+
+current_signature = (tuple((name, len(content)) for name, content in files_payload),
+                     params, tuple(diagonal_crops.items()))
 
 generate_clicked = st.button(
     "🚀 Générer le panorama",
@@ -283,7 +301,9 @@ if generate_clicked:
     def update_progress(fraction: float, text: str) -> None:
         progress_bar.progress(min(max(fraction, 0.0), 1.0), text=text)
 
-    st.session_state["result"] = run_pipeline(files_payload, params, progress=update_progress)
+    st.session_state["result"] = run_pipeline(
+        files_payload, params, progress=update_progress, diagonal_crops=diagonal_crops
+    )
     st.session_state["signature"] = current_signature
     progress_bar.empty()
 
